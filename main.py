@@ -6,22 +6,26 @@
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
 import requests
+import math
 
 mode = input("Mode :\n"
-             "Récupérer le nom d'un pixel depuis son UUID (entrer r)\n"
+             "Récupérer le nom/coordonnées d'un pixel depuis son UUID (entrer r)\n"
              "Récupérer la liste de tous les pixels (entrer l)\n"
              "Entrer choix : ")  # on récup le mode
 
 if mode == 'r':  # on récupère depuis l'UUID
     uuid = input("Entrez UUID : ")
     user_data = requests.get(f"https://admin.fouloscopie.com/users/{uuid}").json()
+    print(user_data)
+    # have_enough_rows = math.floor()
 
     data = {
-            'flag_index': user_data['indexInFlag'],
-            'color': user_data['hexColor'],
+            # 'flag_index': user_data['indexInFlag'],
+            # 'color': user_data['data']['hexColor'],
             'name': user_data['data']['last_name']
             }
-    print(requests.get(f"https://admin.fouloscopie.com/users/{data}").json()['data'])
+    print(data)
+    # print(requests.get(f"https://admin.fouloscopie.com/users/{data}").json()['data'])
 elif mode == 'l':
     flagRequest = requests.get('https://api-flag.fouloscopie.com/flag')
     print(flagRequest.headers['content-type'])
