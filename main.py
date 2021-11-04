@@ -10,7 +10,7 @@ Welcome ! This is a Python API for the flag of DirtyBiologyStan available here :
 Don't forget to read the doc :)
 """
 import requests
-__version__ = "1.0"
+__version__ = "1.1"
 __author__ = "jd-develop"
 
 
@@ -37,7 +37,7 @@ def get_user_raw_list() -> list[dict]:
 
 def get_index_from_coordinates(x: int = 1, y: int = 1):
     """
-        Calculates the index of user_raw_list (get_user_raw_list()) from coordinates.
+        Calculates the index in the user_raw_list (get_user_raw_list()) from coordinates.
 
     :param x: int = 1
     :param y: int = 1
@@ -69,7 +69,16 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
     if user_raw_list is None:
         user_raw_list = get_user_raw_list()
 
-    user_raw_data = requests.get(f"https://admin.fouloscopie.com/users/{user_raw_list[index]['author']}").json()
+    try:
+        user_raw_data = requests.get(f"https://admin.fouloscopie.com/users/{user_raw_list[index]['author']}").json()
+    except IndexError:
+        return {
+            'uuid': "",
+            'index': "",
+            'name': "does not exist",
+            'color': ""
+
+        }
 
     uuid = user_raw_list[index]['author']
     index_ = user_raw_list[index]['indexInFlag']

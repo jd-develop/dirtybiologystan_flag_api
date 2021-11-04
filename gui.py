@@ -89,6 +89,12 @@ def get_info():
         return
 
     data = get_data_from_index(get_index_from_coordinates(*coordinates), user_raw_list_)
+
+    if data['name'] == "does not exist":
+        nameLabel.config(text="Désolé, ce pixel n'a pas l'air d'exister...")
+        nameLabel.pack()
+        return
+
     nameLabel.config(text=f"Nom du pixel : {data['name']}")
     if re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', data['color']):  # la couleur est vraiment une couleur
         # convertir l'hexadécimal en RGB :
