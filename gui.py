@@ -62,7 +62,7 @@ def get_info():
     uuidLabel.pack_forget()
     try:
         if ':' in coordinatesEntry.get():
-            coordinates = coordinatesEntry.get().split(':')
+            coordinates = coordinatesEntry.get().strip('[').strip(']').split(':')
             if isinstance(coordinates, list):
                 if len(coordinates) == 2:
                     coordinates[0] = int(coordinates[0])
