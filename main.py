@@ -16,7 +16,8 @@ __author__ = "jd-develop"
 
 def get_user_raw_list() -> list[dict]:
     """
-        It returns the list of all users.
+        It returns the list of all users. The list have the shape :
+            [{'entityId', 'author', 'hexColor', 'indexInFlag'}, ...] (for each user)
 
         entityId is the UUID of the fouloscopie.com user, which the API is private
         author is the UUID of the pixel, which the API is open
@@ -24,9 +25,11 @@ def get_user_raw_list() -> list[dict]:
         indexInFlag is a pixel index, but due to website crashes it's not the index in the user_raw_list (for example,
                 my indexInFlag is 51773 but my index in user_raw_list is 50063.
 
-    :return: user_raw_list: list[dict{'entityId', 'author', 'hexColor', 'indexInFlag'}]
+        WARNING : execution of this function may take a while !!
+
+    :return: user_raw_list: list[dict]
     """
-    print("Fetching https://api-flag.fouloscopie.com/flag...")
+    print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
     flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
     user_raw_list = flag_request.json()
     return user_raw_list
