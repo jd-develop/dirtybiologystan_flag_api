@@ -10,7 +10,7 @@ Welcome ! This is a Python API for the flag of DirtyBiologyStan available here :
 Don't forget to read the doc :)
 """
 import requests
-__version__ = "alpha 1"
+__version__ = "1.0"
 __author__ = "jd-develop"
 
 
