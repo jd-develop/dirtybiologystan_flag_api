@@ -26,7 +26,7 @@ def get_user_raw_list() -> list[dict]:
 
     :return: user_raw_list: list[dict{'entityId', 'author', 'hexColor', 'indexInFlag'}]
     """
-    print("Récupération depuis https://api-flag.fouloscopie.com/flag...")
+    print("Fetching https://api-flag.fouloscopie.com/flag...")
     flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
     user_raw_list = flag_request.json()
     return user_raw_list
@@ -80,6 +80,4 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
 
     }
 
-# pour récupérer seulement les vraies couleurs depuis la liste de couleurs et pas les "couleurs" des trolls :
-# ^#(?:[0-9a-fA-F]{1,2}){3}$
 # thanks for using this API ;)
