@@ -5,9 +5,13 @@
 # indexInFlag of jddev : 51773
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
+# département of jddev : Désert de l'Ouest
 """
 Welcome ! This is a Python API for the flag of DirtyBiologyStan available here : https://fouloscopie.com/experiment/7
 Don't forget to read the doc :)
+
+Thanks :
+CoDaTi for the départements API
 """
 import requests
 __version__ = "1.1"
@@ -35,6 +39,27 @@ def get_user_raw_list() -> list[dict]:
     return user_raw_list
 
 
+def get_dpt_list() -> list[dict]:
+    """
+        It returns the list of all départements. The list have the shape :
+            [{'min', 'max', 'name', 'region', 'discord'}, ...] (for each département)
+
+        min is the dict {'x', 'y'} of the minimum coordinates of the département
+        max is the dict {'x', 'y'} of the maximum coordinates of the département
+        name is the name of the département
+        region is the name of the région of the département
+        discord is the invite link to the Discord Server of the département
+
+        WARNING : execution of this function may take a while !!
+
+    :return: dpt_list: list[dict]
+    """
+    print("Fetching https://api.codati.ovh/departements/... (it may take a while...)")
+    dpt_request = requests.get('https://api.codati.ovh/departements/')
+    dpt_list = dpt_request.json()
+    return dpt_list
+
+
 def get_index_from_coordinates(x: int = 1, y: int = 1):
     """
         Calculates the index in the user_raw_list (get_user_raw_list()) from coordinates.
@@ -49,7 +74,8 @@ def get_index_from_coordinates(x: int = 1, y: int = 1):
         return (y + ((x+1) // 2) * (2*((x+1)//2) - x % 2 - 1)) - 1
 
 
-def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
+def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordinates: tuple = None,
+                        dpt_list: list[dict] = None):
     """
         Get the data from the index and the user raw list (get_user_raw_list())
 
@@ -59,15 +85,22 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
                 'index': pixel index ('indexInFlag' in an element of the user_raw_list, different from the index param!)
                 'name' : username ('last_name' in key 'data' of the user from https://admin.fouloscopie.com/users/(uuid)
                 'color': color of the pixel ('hexColor' in an element of the user_raw_list)
+                'dpt': département name of the pixel
             }
         warning : 'color' is not automatically an hex, due to trolls
 
     :param index: int = 0
     :param user_raw_list: user_raw_list: list[dict] = get_user_raw_list()
+    :param coordinates: tuple = (1, 1) : coordonnées (x, y)
+    :param dpt_list: list[dict] = get_dpt_list() : liste de départements
     :return: data: dict
     """
     if user_raw_list is None:
         user_raw_list = get_user_raw_list()
+    if coordinates is None:
+        coordinates = (1, 1)
+    if dpt_list is None:
+        dpt_list = get_dpt_list()
 
     try:
         user_raw_data = requests.get(f"https://admin.fouloscopie.com/users/{user_raw_list[index]['author']}").json()
@@ -76,8 +109,8 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
             'uuid': "",
             'index': "",
             'name': "does not exist",
-            'color': ""
-
+            'color': "",
+            'dpt': ""
         }
 
     try:
@@ -85,24 +118,77 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
         index_ = user_raw_list[index]['indexInFlag']
         name = user_raw_data['data']['last_name']
         color = user_raw_list[index]['hexColor']
+        dpt = get_dpt_from_coordinates(coordinates, dpt_list)['name']
         return {
             'uuid': uuid,
             'index': index_,
             'name': name,
-            'color': color
-
+            'color': color,
+            'dpt': dpt
         }
     except KeyError:
         uuid = user_raw_list[index]['author']
         index_ = user_raw_list[index]['indexInFlag']
         name = "unattributed"
         color = "unattributed"
+        dpt = get_dpt_from_coordinates(coordinates, dpt_list)['name']
         return {
             'uuid': uuid,
             'index': index_,
             'name': name,
-            'color': color
-
+            'color': color,
+            'dpt': dpt
         }
+
+
+def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> dict:
+    """
+        Returns the département of a pixel from the coordinates.
+
+        A département returned have the shape :
+            {'min', 'max', 'name', 'region', 'discord'}
+
+        min is the dict {'x', 'y'} of the minimum coordinates of the département
+        max is the dict {'x', 'y'} of the maximum coordinates of the département
+        name is the name of the département
+        region is the name of the région of the département
+        discord is the invite link to the Discord Server of the département
+
+    :param coordinates: tuple(x, y)
+    :param dpt_list: list : the dpt list from get_dpt_list()
+    :return: dpt: dict : a dpt from the dpt_list
+    """
+    if dpt_list is None:
+        dpt_list = get_dpt_list()
+
+    # get the min x of each département
+    min_x_dpt_list = []
+    for dpt in dpt_list:
+        min_x_dpt_list.append(dpt['min']['x'])
+
+    # get the min y of each département
+    min_y_dpt_list = []
+    for dpt in dpt_list:
+        min_y_dpt_list.append(dpt['min']['y'])
+
+    dpt_matching = {}
+    for index, min_x in enumerate(min_x_dpt_list):
+        if coordinates[0] >= min_x:
+            dpt_matching[dpt_list[index]["name"]] = index
+
+    index = 0
+    for index, min_y in enumerate(min_y_dpt_list):
+        if coordinates[1] >= min_y:
+            if dpt_list[index]["name"] in dpt_matching:
+                break
+
+    for index, dpt_ in enumerate(dpt_list):
+        dpt = dpt_['min']['x'] <= coordinates[0] <= dpt_['max']['x'] and dpt_['min']['y'] <= coordinates[1] <= \
+              dpt_['max']['y']
+        if dpt:
+            break
+
+    return dpt_list[index]
+
 
 # thanks for using this API ;)

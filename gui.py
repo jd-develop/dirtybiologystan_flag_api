@@ -5,12 +5,14 @@
 # indexInFlag of jddev : 51773
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
+# département of jddev : Désert de l'Ouest
 import tkinter as tk
 import math
 import re
-from main import get_index_from_coordinates, get_user_raw_list, get_data_from_index
+from main import get_index_from_coordinates, get_user_raw_list, get_data_from_index, get_dpt_list
 
 user_raw_list_ = []
+dpt_list = []
 
 
 def def_user_raw_list():
@@ -18,8 +20,9 @@ def def_user_raw_list():
         Defines user_raw_list variable
     :return: nothing
     """
-    global user_raw_list_
+    global user_raw_list_, dpt_list
     user_raw_list_ = get_user_raw_list()
+    dpt_list = get_dpt_list()
 
     loadButton.pack_forget()
 
@@ -31,9 +34,10 @@ def def_user_raw_list():
 
 
 def re_def_user_raw_list():
-    global user_raw_list_
+    global user_raw_list_, dpt_list
 
     user_raw_list_ = get_user_raw_list()
+    dpt_list = get_dpt_list()
 
     reloadButton.pack_forget()
     coordinatesLabel.pack_forget()
@@ -43,6 +47,7 @@ def re_def_user_raw_list():
     colorLabel.pack_forget()
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
+    dptLabel.pack_forget()
 
     reloadButton.pack()
     coordinatesLabel.pack()
@@ -60,6 +65,7 @@ def get_info():
     colorLabel.pack_forget()
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
+    dptLabel.pack_forget()
     try:
         if ':' in coordinatesEntry.get():
             coordinates = coordinatesEntry.get().strip('[').strip(']').split(':')
@@ -88,7 +94,7 @@ def get_info():
         nameLabel.pack()
         return
 
-    data = get_data_from_index(get_index_from_coordinates(*coordinates), user_raw_list_)
+    data = get_data_from_index(get_index_from_coordinates(*coordinates), user_raw_list_, tuple(coordinates), dpt_list)
 
     if data['name'] == "does not exist":
         nameLabel.config(text="Désolé, ce pixel n'a pas l'air d'exister...")
@@ -114,11 +120,13 @@ def get_info():
             colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg="white", fg="black")
     indexLabel.config(text=f"Index du pixel : {data['index']}")
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
+    dptLabel.config(text=f"Région du pixel : {data['dpt']}")
 
     nameLabel.pack()
     colorLabel.pack()
     indexLabel.pack()
     uuidLabel.pack()
+    dptLabel.pack()
 
 
 root = tk.Tk()
@@ -138,8 +146,9 @@ getInfoButton = tk.Button(rootFrame, text="Obtenir les informations du pixel", f
 
 nameLabel = tk.Label(rootFrame, text='Nom du pixel :', font='Tahoma')
 colorLabel = tk.Label(rootFrame, text='Couleur du pixel :', font='Tahoma')
+indexLabel = tk.Label(rootFrame, text='Index du pixel :', font='Tahoma')
 uuidLabel = tk.Label(rootFrame, text='UUID du pixel :', font='Tahoma')
-indexLabel = tk.Label(rootFrame, text='index du pixel :', font='Tahoma')
+dptLabel = tk.Label(rootFrame, text='Département du pixel :', font='Tahoma')
 
 titleLabel.pack()
 loadButton.pack()
