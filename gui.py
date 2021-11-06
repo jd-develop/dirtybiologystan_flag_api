@@ -95,19 +95,23 @@ def get_info():
         nameLabel.pack()
         return
 
-    nameLabel.config(text=f"Nom du pixel : {data['name']}")
-    if re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', data['color']):  # la couleur est vraiment une couleur
-        # convertir l'hexadécimal en RGB :
-        (r, g, b) = tuple(int(data['color'].lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))
-
-        # calculer l'indice de luminosité :
-        darkness_index = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
-        if darkness_index > 127.5:  # la couleur est clair, on met du noir
-            colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="black")
-        else:  # elle est claire, on met du noir
-            colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="white")
+    if data['name'] == "unattributed" and data['color'] == "unattributed":
+        nameLabel.config(text="Désolé, ce pixel existe, mais il n'est pas attribué.")
+        colorLabel.config(text="Peut être est-il dans un crash ¯\\_(ツ)_/¯", bg="whitesmoke", fg="black")
     else:
-        colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg="white", fg="black")
+        nameLabel.config(text=f"Nom du pixel : {data['name']}")
+        if re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', data['color']):  # la couleur est vraiment une couleur
+            # convertir l'hexadécimal en RGB :
+            (r, g, b) = tuple(int(data['color'].lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))
+
+            # calculer l'indice de luminosité :
+            darkness_index = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+            if darkness_index > 127.5:  # la couleur est clair, on met du noir
+                colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="black")
+            else:  # elle est claire, on met du noir
+                colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="white")
+        else:
+            colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg="white", fg="black")
     indexLabel.config(text=f"Index du pixel : {data['index']}")
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
 

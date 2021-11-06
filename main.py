@@ -80,16 +80,29 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None):
 
         }
 
-    uuid = user_raw_list[index]['author']
-    index_ = user_raw_list[index]['indexInFlag']
-    name = user_raw_data['data']['last_name']
-    color = user_raw_list[index]['hexColor']
-    return {
-        'uuid': uuid,
-        'index': index_,
-        'name': name,
-        'color': color
+    try:
+        uuid = user_raw_list[index]['author']
+        index_ = user_raw_list[index]['indexInFlag']
+        name = user_raw_data['data']['last_name']
+        color = user_raw_list[index]['hexColor']
+        return {
+            'uuid': uuid,
+            'index': index_,
+            'name': name,
+            'color': color
 
-    }
+        }
+    except KeyError:
+        uuid = user_raw_list[index]['author']
+        index_ = user_raw_list[index]['indexInFlag']
+        name = "unattributed"
+        color = "unattributed"
+        return {
+            'uuid': uuid,
+            'index': index_,
+            'name': name,
+            'color': color
+
+        }
 
 # thanks for using this API ;)
