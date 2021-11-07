@@ -76,7 +76,9 @@ def re_def_user_raw_list():
     coordinatesEntry.pack_forget()
     getInfoButton.pack_forget()
     nameLabel.pack_forget()
-    colorLabel.pack_forget()
+    colorLabel.grid_forget()
+    colorLabel1.grid_forget()
+    colorFrame.pack_forget()
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
     dptLabel.pack_forget()
@@ -97,7 +99,9 @@ def get_info():
     :return: nothing
     """
     nameLabel.pack_forget()
-    colorLabel.pack_forget()
+    colorLabel.grid_forget()
+    colorLabel1.grid_forget()
+    colorFrame.pack_forget()
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
     dptLabel.pack_forget()
@@ -144,6 +148,7 @@ def get_info():
         colorLabel.config(text="Peut être est-il dans un crash ¯\\_(ツ)_/¯", bg="whitesmoke", fg="black")
     else:
         nameLabel.config(text=f"Nom du pixel : {data['name']}")
+        colorLabel.config(text="Couleur du pixel :")
         if re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', data['color']):  # la couleur est vraiment une couleur
             # convertir l'hexadécimal en RGB :
             (r, g, b) = tuple(int(data['color'].lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))
@@ -151,9 +156,9 @@ def get_info():
             # calculer l'indice de luminosité :
             darkness_index = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
             if darkness_index > 127.5:  # la couleur est clair, on met du noir
-                colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="black")
+                colorLabel1.config(text=f"{data['color']}", bg=data['color'], fg="black")
             else:  # elle est claire, on met du noir
-                colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="white")
+                colorLabel1.config(text=f"{data['color']}", bg=data['color'], fg="white")
         else:
             colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg="white", fg="black")
 
@@ -191,7 +196,9 @@ def get_info():
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
 
     nameLabel.pack()
-    colorLabel.pack()
+    colorLabel.grid(column=0, row=0)
+    colorLabel1.grid(column=1, row=0)
+    colorFrame.pack()
     dptLabel.pack()
     discordLabel.grid(row=0)
     discordLinkLabel.grid(column=1, row=0)
@@ -217,7 +224,9 @@ getInfoButton = tk.Button(rootFrame, text="Obtenir les informations du pixel", f
                           command=lambda: get_info())
 
 nameLabel = tk.Label(rootFrame, text='Nom du pixel :', font='Tahoma')
-colorLabel = tk.Label(rootFrame, text='Couleur du pixel :', font='Tahoma')
+colorFrame = tk.Frame(rootFrame)
+colorLabel = tk.Label(colorFrame, text='Couleur du pixel :', font='Tahoma')
+colorLabel1 = tk.Label(colorFrame, text='#FFFFFF', font='Tahoma')
 dptLabel = tk.Label(rootFrame, text='Département du pixel :', font='Tahoma')
 discordFrame = tk.Frame(rootFrame)
 discordLabel = tk.Label(discordFrame, text='Discord du département :', font='Tahoma')
