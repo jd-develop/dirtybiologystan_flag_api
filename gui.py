@@ -7,11 +7,13 @@
 # color of jddev : #10EDB8
 # département of jddev : Désert de l'Ouest
 import tkinter as tk
+import tkinter.messagebox as msg
 import math
 import re
+import requests
 from main import get_index_from_coordinates, get_user_raw_list, get_data_from_index, get_dpt_list
 
-user_raw_list_ = []
+user_raw_list = []
 dpt_list = []
 
 
@@ -20,9 +22,16 @@ def def_user_raw_list():
         Defines user_raw_list variable
     :return: nothing
     """
-    global user_raw_list_, dpt_list
-    user_raw_list_ = get_user_raw_list()
-    dpt_list = get_dpt_list()
+    global user_raw_list, dpt_list
+    try:
+        user_raw_list = get_user_raw_list()
+        dpt_list = get_dpt_list()
+    except requests.exceptions.ConnectionError:
+        print("Failed : requests.exceptions.ConnectionError")
+        msg.showerror("Erreur de réseau", "Impossible de charger le drapeau.\n"
+                                          "Cela peut être dû à une absence de connexion Internet.\n"
+                                          "Détails : requests.exceptions.ConnectionError")
+        return
 
     loadButton.pack_forget()
 
@@ -34,10 +43,16 @@ def def_user_raw_list():
 
 
 def re_def_user_raw_list():
-    global user_raw_list_, dpt_list
-
-    user_raw_list_ = get_user_raw_list()
-    dpt_list = get_dpt_list()
+    global user_raw_list, dpt_list
+    try:
+        user_raw_list = get_user_raw_list()
+        dpt_list = get_dpt_list()
+    except requests.exceptions.ConnectionError:
+        print("Failed : requests.exceptions.ConnectionError")
+        msg.showerror("Erreur de réseau", "Impossible de charger le drapeau.\n"
+                                          "Cela peut être dû à une absence de connexion Internet.\n"
+                                          "Détails : requests.exceptions.ConnectionError")
+        return
 
     reloadButton.pack_forget()
     coordinatesLabel.pack_forget()
@@ -94,7 +109,7 @@ def get_info():
         nameLabel.pack()
         return
 
-    data = get_data_from_index(get_index_from_coordinates(*coordinates), user_raw_list_, tuple(coordinates), dpt_list)
+    data = get_data_from_index(get_index_from_coordinates(*coordinates), user_raw_list, tuple(coordinates), dpt_list)
 
     if data['name'] == "does not exist":
         nameLabel.config(text="Désolé, ce pixel n'a pas l'air d'exister...")
