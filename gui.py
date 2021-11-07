@@ -156,7 +156,12 @@ def get_info():
     dpt_text = "Département du pixel : "
     reg_text = "(Région : "
     discord_list = []
+    dpt_list_ = []
     for dpt in data['dpt']:
+        if dpt not in dpt_list_:
+            dpt_list_.append(dpt)
+
+    for dpt in dpt_list_:
         dpt_text += dpt['name'] + ' / '
         reg_text += dpt['region'] + ' / '
         discord_list.append(dpt['discord'])
