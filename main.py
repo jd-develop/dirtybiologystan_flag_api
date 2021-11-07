@@ -161,31 +161,12 @@ def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] =
     if dpt_list is None:
         dpt_list = get_dpt_list()
 
-    # get the min x of each département
-    min_x_dpt_list = []
-    for dpt in dpt_list:
-        min_x_dpt_list.append(dpt['min']['x'])
-
-    # get the min y of each département
-    min_y_dpt_list = []
-    for dpt in dpt_list:
-        min_y_dpt_list.append(dpt['min']['y'])
-
-    dpt_matching = {}
-    for index, min_x in enumerate(min_x_dpt_list):
-        if coordinates[0] >= min_x:
-            dpt_matching[dpt_list[index]["name"]] = index
-
+    x = coordinates[0]
+    y = coordinates[1]
     index = 0
-    for index, min_y in enumerate(min_y_dpt_list):
-        if coordinates[1] >= min_y:
-            if dpt_list[index]["name"] in dpt_matching:
-                break
-
-    for index, dpt_ in enumerate(dpt_list):
-        dpt = dpt_['min']['x'] <= coordinates[0] <= dpt_['max']['x'] and dpt_['min']['y'] <= coordinates[1] <= \
-              dpt_['max']['y']
-        if dpt:
+    for index, dpt in enumerate(dpt_list):
+        matching = dpt['min']['x'] <= x <= dpt['max']['x'] and dpt['min']['y'] <= y <= dpt['max']['y']
+        if matching:
             break
 
     return dpt_list[index]
