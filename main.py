@@ -118,7 +118,7 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
         index_ = user_raw_list[index]['indexInFlag']
         name = user_raw_data['data']['last_name']
         color = user_raw_list[index]['hexColor']
-        dpt = get_dpt_from_coordinates(coordinates, dpt_list)['name']
+        dpt = get_dpt_from_coordinates(coordinates, dpt_list)
         return {
             'uuid': uuid,
             'index': index_,
@@ -131,7 +131,7 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
         index_ = user_raw_list[index]['indexInFlag']
         name = "unattributed"
         color = "unattributed"
-        dpt = get_dpt_from_coordinates(coordinates, dpt_list)['name']
+        dpt = get_dpt_from_coordinates(coordinates, dpt_list)
         return {
             'uuid': uuid,
             'index': index_,
@@ -141,9 +141,9 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
         }
 
 
-def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> dict:
+def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> list[dict]:
     """
-        Returns the département of a pixel from the coordinates.
+        Returns the département(s) of a pixel from the coordinates, in a list.
 
         A département returned have the shape :
             {'min', 'max', 'name', 'region', 'discord'}
@@ -156,20 +156,20 @@ def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] =
 
     :param coordinates: tuple(x, y)
     :param dpt_list: list : the dpt list from get_dpt_list()
-    :return: dpt: dict : a dpt from the dpt_list
+    :return: dpt: list[dict] : a list of matching dpts from the dpt_list
     """
     if dpt_list is None:
         dpt_list = get_dpt_list()
 
     x = coordinates[0]
     y = coordinates[1]
-    index = 0
-    for index, dpt in enumerate(dpt_list):
+    matching_dpt_list = []
+    for dpt in dpt_list:
         matching = dpt['min']['x'] <= x <= dpt['max']['x'] and dpt['min']['y'] <= y <= dpt['max']['y']
         if matching:
-            break
+            matching_dpt_list.append(dpt)
 
-    return dpt_list[index]
+    return matching_dpt_list
 
 
 # thanks for using this API ;)

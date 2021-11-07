@@ -26,6 +26,7 @@ def def_user_raw_list():
     try:
         user_raw_list = get_user_raw_list()
         dpt_list = get_dpt_list()
+        print("Loaded !")
     except requests.exceptions.ConnectionError:
         print("Failed : requests.exceptions.ConnectionError")
         msg.showerror("Erreur de réseau", "Impossible de charger le drapeau.\n"
@@ -47,6 +48,7 @@ def re_def_user_raw_list():
     try:
         user_raw_list = get_user_raw_list()
         dpt_list = get_dpt_list()
+        print("Loaded !")
     except requests.exceptions.ConnectionError:
         print("Failed : requests.exceptions.ConnectionError")
         msg.showerror("Erreur de réseau", "Impossible de charger le drapeau.\n"
@@ -133,15 +135,28 @@ def get_info():
                 colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg=data['color'], fg="white")
         else:
             colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg="white", fg="black")
+
+    dpt_text = "Département du pixel : "
+    reg_text = "(Région : "
+    for dpt in data['dpt']:
+        dpt_text += dpt['name'] + ' / '
+        reg_text += dpt['region'] + ' / '
+
+    dpt_text = dpt_text[:len(dpt_text) - 3]
+    reg_text = reg_text[:len(reg_text) - 3]
+    reg_text += ")"
+    if reg_text != "(Région : Coeur historique)":
+        dpt_text += " " + reg_text
+    dptLabel.config(text=dpt_text)
+
     indexLabel.config(text=f"Index du pixel : {data['index']}")
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
-    dptLabel.config(text=f"Région du pixel : {data['dpt']}")
 
     nameLabel.pack()
     colorLabel.pack()
+    dptLabel.pack()
     indexLabel.pack()
     uuidLabel.pack()
-    dptLabel.pack()
 
 
 root = tk.Tk()
@@ -161,9 +176,9 @@ getInfoButton = tk.Button(rootFrame, text="Obtenir les informations du pixel", f
 
 nameLabel = tk.Label(rootFrame, text='Nom du pixel :', font='Tahoma')
 colorLabel = tk.Label(rootFrame, text='Couleur du pixel :', font='Tahoma')
+dptLabel = tk.Label(rootFrame, text='Département du pixel :', font='Tahoma')
 indexLabel = tk.Label(rootFrame, text='Index du pixel :', font='Tahoma')
 uuidLabel = tk.Label(rootFrame, text='UUID du pixel :', font='Tahoma')
-dptLabel = tk.Label(rootFrame, text='Département du pixel :', font='Tahoma')
 
 titleLabel.pack()
 loadButton.pack()
