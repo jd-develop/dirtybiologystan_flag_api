@@ -10,11 +10,26 @@ import tkinter as tk
 import tkinter.messagebox as msg
 import math
 import re
+import webbrowser
+
 import requests
+
 from main import get_index_from_coordinates, get_user_raw_list, get_data_from_index, get_dpt_list
 
 user_raw_list = []
 dpt_list = []
+
+
+def open_webpages(webpages: list[str] = None):
+    """
+        Opens all webpages of webpages
+    :param webpages: list of webpages
+    :return: nothing
+    """
+    if webpages is None:
+        webpages = ["https://discord.com/"]
+    for webpage in webpages:
+        webbrowser.open_new_tab(webpage)
 
 
 def def_user_raw_list():
@@ -160,7 +175,7 @@ def get_info():
 
     discord_text = discord_text[:len(discord_text) - 3]
 
-    discordLabel.config(text=discord_text)
+    discordLabel.config(text=discord_text, font='Tahoma 12 underline', fg='blue', cursor='hand2')
 
     indexLabel.config(text=f"Index du pixel : {data['index']}")
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
@@ -169,6 +184,7 @@ def get_info():
     colorLabel.pack()
     dptLabel.pack()
     discordLabel.pack()
+    discordLabel.bind("<Button-1>", lambda e: open_webpages(discord_list))
     indexLabel.pack()
     uuidLabel.pack()
 
