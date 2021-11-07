@@ -65,6 +65,7 @@ def re_def_user_raw_list():
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
     dptLabel.pack_forget()
+    discordLabel.pack_forget()
 
     reloadButton.pack()
     coordinatesLabel.pack()
@@ -83,6 +84,7 @@ def get_info():
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
     dptLabel.pack_forget()
+    discordLabel.pack_forget()
     try:
         if ':' in coordinatesEntry.get():
             coordinates = coordinatesEntry.get().strip('[').strip(']').split(':')
@@ -138,9 +140,11 @@ def get_info():
 
     dpt_text = "Département du pixel : "
     reg_text = "(Région : "
+    discord_list = []
     for dpt in data['dpt']:
         dpt_text += dpt['name'] + ' / '
         reg_text += dpt['region'] + ' / '
+        discord_list.append(dpt['discord'])
 
     dpt_text = dpt_text[:len(dpt_text) - 3]
     reg_text = reg_text[:len(reg_text) - 3]
@@ -149,12 +153,22 @@ def get_info():
         dpt_text += " " + reg_text
     dptLabel.config(text=dpt_text)
 
+    discord_text = "Discord du département : "
+    for discord_link in discord_list:
+        discord_link = discord_link[8:]
+        discord_text += discord_link + ' / '
+
+    discord_text = discord_text[:len(discord_text) - 3]
+
+    discordLabel.config(text=discord_text)
+
     indexLabel.config(text=f"Index du pixel : {data['index']}")
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
 
     nameLabel.pack()
     colorLabel.pack()
     dptLabel.pack()
+    discordLabel.pack()
     indexLabel.pack()
     uuidLabel.pack()
 
@@ -177,6 +191,7 @@ getInfoButton = tk.Button(rootFrame, text="Obtenir les informations du pixel", f
 nameLabel = tk.Label(rootFrame, text='Nom du pixel :', font='Tahoma')
 colorLabel = tk.Label(rootFrame, text='Couleur du pixel :', font='Tahoma')
 dptLabel = tk.Label(rootFrame, text='Département du pixel :', font='Tahoma')
+discordLabel = tk.Label(rootFrame, text='Discord du département : ', font='Tahoma')
 indexLabel = tk.Label(rootFrame, text='Index du pixel :', font='Tahoma')
 uuidLabel = tk.Label(rootFrame, text='UUID du pixel :', font='Tahoma')
 
