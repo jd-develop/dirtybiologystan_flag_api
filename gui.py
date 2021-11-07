@@ -27,7 +27,7 @@ def open_webpages(webpages: list[str] = None):
     :return: nothing
     """
     if webpages is None:
-        webpages = ["https://discord.com/"]
+        webpages = ["https://discord.gg/shF4BCdm"]
     for webpage in webpages:
         webbrowser.open_new_tab(webpage)
 
@@ -80,7 +80,9 @@ def re_def_user_raw_list():
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
     dptLabel.pack_forget()
-    discordLabel.pack_forget()
+    discordLabel.grid_forget()
+    discordLinkLabel.grid_forget()
+    discordFrame.pack_forget()
 
     reloadButton.pack()
     coordinatesLabel.pack()
@@ -99,7 +101,9 @@ def get_info():
     indexLabel.pack_forget()
     uuidLabel.pack_forget()
     dptLabel.pack_forget()
-    discordLabel.pack_forget()
+    discordLabel.grid_forget()
+    discordLinkLabel.grid_forget()
+    discordFrame.pack_forget()
     try:
         if ':' in coordinatesEntry.get():
             coordinates = coordinatesEntry.get().strip('[').strip(']').split(':')
@@ -173,14 +177,15 @@ def get_info():
         dpt_text += " " + reg_text
     dptLabel.config(text=dpt_text)
 
-    discord_text = "Discord du département : "
+    discord_text = ""
     for discord_link in discord_list:
-        discord_link = discord_link[8:]
+        discord_link = discord_link.replace("https://discord.com/invite", "discord.gg")
         discord_text += discord_link + ' / '
 
     discord_text = discord_text[:len(discord_text) - 3]
 
-    discordLabel.config(text=discord_text, font='Tahoma 12 underline', fg='blue', cursor='hand2')
+    discordLabel.config(text="Discord du département :")
+    discordLinkLabel.config(text=discord_text, font='Tahoma 12 underline', fg='blue', cursor='hand2')
 
     indexLabel.config(text=f"Index du pixel : {data['index']}")
     uuidLabel.config(text=f"UUID du pixel : {data['uuid']}")
@@ -188,8 +193,10 @@ def get_info():
     nameLabel.pack()
     colorLabel.pack()
     dptLabel.pack()
-    discordLabel.pack()
-    discordLabel.bind("<Button-1>", lambda e: open_webpages(discord_list))
+    discordLabel.grid(row=0)
+    discordLinkLabel.grid(column=1, row=0)
+    discordLinkLabel.bind("<Button-1>", lambda e: open_webpages(discord_list))
+    discordFrame.pack()
     indexLabel.pack()
     uuidLabel.pack()
 
@@ -212,7 +219,10 @@ getInfoButton = tk.Button(rootFrame, text="Obtenir les informations du pixel", f
 nameLabel = tk.Label(rootFrame, text='Nom du pixel :', font='Tahoma')
 colorLabel = tk.Label(rootFrame, text='Couleur du pixel :', font='Tahoma')
 dptLabel = tk.Label(rootFrame, text='Département du pixel :', font='Tahoma')
-discordLabel = tk.Label(rootFrame, text='Discord du département : ', font='Tahoma')
+discordFrame = tk.Frame(rootFrame)
+discordLabel = tk.Label(discordFrame, text='Discord du département :', font='Tahoma')
+discordLinkLabel = tk.Label(discordFrame, text='discord.gg/shF4BCdm', font='Tahoma 12 underline', cursor='hand2',
+                            fg='blue')
 indexLabel = tk.Label(rootFrame, text='Index du pixel :', font='Tahoma')
 uuidLabel = tk.Label(rootFrame, text='UUID du pixel :', font='Tahoma')
 
