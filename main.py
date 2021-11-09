@@ -5,7 +5,7 @@
 # indexInFlag of jddev : 51773
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
-# département of jddev : Désert de l'Ouest (région : La Méridionale)
+# département of jddev : Désert de l'Ouest
 """
 Welcome ! This is a Python API for the flag of DirtyBiologyStan available here : https://fouloscopie.com/experiment/7
 Don't forget to read the doc :)
@@ -14,7 +14,7 @@ Thanks :
 CoDaTi for the départements API
 """
 import requests
-__version__ = "1.3.2"
+__version__ = "1.3"
 __author__ = "jd-develop"
 
 
@@ -35,10 +35,6 @@ def get_user_raw_list() -> list[dict]:
     """
     print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
     flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
-    if flag_request == '404 page not found':
-        return '404 not found : maybe website is down'
-    elif flag_request == '{"statusCode":404,"message":"Cannot GET /flag","error":"Not Found"}':
-        return '404 not found : maybe website is down'
     user_raw_list = flag_request.json()
     return user_raw_list
 
@@ -60,10 +56,6 @@ def get_dpt_list() -> list[dict]:
     """
     print("Fetching https://api.codati.ovh/departements/... (it may take a while...)")
     dpt_request = requests.get('https://api.codati.ovh/departements/')
-    if dpt_request == '404 page not found':
-        return '404 not found : maybe website is down'
-    elif dpt_request == '':
-        return '404 not found : maybe website is down'
     dpt_list = dpt_request.json()
     return dpt_list
 
