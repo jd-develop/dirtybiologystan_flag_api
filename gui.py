@@ -5,7 +5,7 @@
 # indexInFlag of jddev : 51773
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
-# département of jddev : Désert de l'Ouest (région : La Méridionale)
+# département of jddev : Désert de l'Ouest
 import tkinter as tk
 import tkinter.messagebox as msg
 import math
@@ -41,13 +41,6 @@ def def_user_raw_list():
     try:
         user_raw_list = get_user_raw_list()
         dpt_list = get_dpt_list()
-        if user_raw_list == '404 not found : maybe website is down' or\
-                dpt_list == '404 not found : maybe website is down':
-            print("Failed : 404 error (is website down?)")
-            msg.showerror("Erreur de site web", "Impossible de charger le drapeau.\n"
-                                                "Cela peut être dû à une maintenance ou un problème lié au site.\n"
-                                                "Détails : 404 not found.")
-            return
         print("Loaded !")
     except requests.exceptions.ConnectionError:
         print("Failed : requests.exceptions.ConnectionError")
