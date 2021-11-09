@@ -5,7 +5,7 @@
 # indexInFlag of jddev : 51773
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
-# département of jddev : Désert de l'Ouest (région : La Méridionale)
+# département of jddev : Désert de l'Ouest
 """
 Welcome ! This is a Python API for the flag of DirtyBiologyStan available here : https://fouloscopie.com/experiment/7
 Don't forget to read the doc :)
@@ -14,7 +14,7 @@ Thanks :
 CoDaTi for the départements API
 """
 import requests
-__version__ = "1.3.2"
+__version__ = "1.2"
 __author__ = "jd-develop"
 
 
@@ -35,10 +35,6 @@ def get_user_raw_list() -> list[dict]:
     """
     print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
     flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
-    if flag_request == '404 page not found':
-        return '404 not found : maybe website is down'
-    elif flag_request == '{"statusCode":404,"message":"Cannot GET /flag","error":"Not Found"}':
-        return '404 not found : maybe website is down'
     user_raw_list = flag_request.json()
     return user_raw_list
 
@@ -60,10 +56,6 @@ def get_dpt_list() -> list[dict]:
     """
     print("Fetching https://api.codati.ovh/departements/... (it may take a while...)")
     dpt_request = requests.get('https://api.codati.ovh/departements/')
-    if dpt_request == '404 page not found':
-        return '404 not found : maybe website is down'
-    elif dpt_request == '':
-        return '404 not found : maybe website is down'
     dpt_list = dpt_request.json()
     return dpt_list
 
@@ -126,7 +118,7 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
         index_ = user_raw_list[index]['indexInFlag']
         name = user_raw_data['data']['last_name']
         color = user_raw_list[index]['hexColor']
-        dpt = get_dpt_from_coordinates(coordinates, dpt_list)
+        dpt = get_dpt_from_coordinates(coordinates, dpt_list)['name']
         return {
             'uuid': uuid,
             'index': index_,
@@ -139,7 +131,7 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
         index_ = user_raw_list[index]['indexInFlag']
         name = "unattributed"
         color = "unattributed"
-        dpt = get_dpt_from_coordinates(coordinates, dpt_list)
+        dpt = get_dpt_from_coordinates(coordinates, dpt_list)['name']
         return {
             'uuid': uuid,
             'index': index_,
@@ -149,9 +141,9 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
         }
 
 
-def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> list[dict]:
+def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> dict:
     """
-        Returns the département(s) of a pixel from the coordinates, in a list.
+        Returns the département of a pixel from the coordinates.
 
         A département returned have the shape :
             {'min', 'max', 'name', 'region', 'discord'}
@@ -164,20 +156,39 @@ def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] =
 
     :param coordinates: tuple(x, y)
     :param dpt_list: list : the dpt list from get_dpt_list()
-    :return: dpt: list[dict] : a list of matching dpts from the dpt_list
+    :return: dpt: dict : a dpt from the dpt_list
     """
     if dpt_list is None:
         dpt_list = get_dpt_list()
 
-    x = coordinates[0]
-    y = coordinates[1]
-    matching_dpt_list = []
+    # get the min x of each département
+    min_x_dpt_list = []
     for dpt in dpt_list:
-        matching = dpt['min']['x'] <= x <= dpt['max']['x'] and dpt['min']['y'] <= y <= dpt['max']['y']
-        if matching:
-            matching_dpt_list.append(dpt)
+        min_x_dpt_list.append(dpt['min']['x'])
 
-    return matching_dpt_list
+    # get the min y of each département
+    min_y_dpt_list = []
+    for dpt in dpt_list:
+        min_y_dpt_list.append(dpt['min']['y'])
+
+    dpt_matching = {}
+    for index, min_x in enumerate(min_x_dpt_list):
+        if coordinates[0] >= min_x:
+            dpt_matching[dpt_list[index]["name"]] = index
+
+    index = 0
+    for index, min_y in enumerate(min_y_dpt_list):
+        if coordinates[1] >= min_y:
+            if dpt_list[index]["name"] in dpt_matching:
+                break
+
+    for index, dpt_ in enumerate(dpt_list):
+        dpt = dpt_['min']['x'] <= coordinates[0] <= dpt_['max']['x'] and dpt_['min']['y'] <= coordinates[1] <= \
+              dpt_['max']['y']
+        if dpt:
+            break
+
+    return dpt_list[index]
 
 
 # thanks for using this API ;)
