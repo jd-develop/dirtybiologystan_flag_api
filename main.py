@@ -14,7 +14,7 @@ Thanks :
 CoDaTi for the départements API
 """
 import requests
-__version__ = "1.1"
+__version__ = "1.3.2"
 __author__ = "jd-develop"
 
 
