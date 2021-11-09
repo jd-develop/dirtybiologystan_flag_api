@@ -247,3 +247,5 @@ loadButton.pack()
 rootFrame.pack(expand=tk.YES)
 
 root.mainloop()
+
+# Thanks for using this program ;)
