@@ -5,7 +5,7 @@
 
 ## Using this API
 ### Case 1 : use API in a code
-Just copy/paste the folder in your project then `import dirtybiologystan-flag-api.main as flagapi`, and use `flagapi.(funct)`.
+Just copy/paste the folder in your project, rename it `flagapi` (you chan choose another name ^^) then `import flagapi`, and use `flagapi.(funct)`.
 
 ### Case 2 : use GUI
 Launch GUI.py.
