@@ -13,6 +13,8 @@ Don't forget to read the doc :)
 Thanks :
 CoDaTi for the départements API
 """
+import json.decoder
+
 import requests
 __version__ = "1.3.2"
 __author__ = "jd-develop"
@@ -64,7 +66,12 @@ def get_dpt_list() -> list[dict]:
         return '404 not found : maybe website is down'
     elif dpt_request == '':
         return '404 not found : maybe website is down'
-    dpt_list = dpt_request.json()
+    elif dpt_request == 'Bad Gateway':
+        return 'Bad Gateway'
+    try:
+        dpt_list = dpt_request.json()
+    except json.decoder.JSONDecodeError:
+        return dpt_request
     return dpt_list
 
 
