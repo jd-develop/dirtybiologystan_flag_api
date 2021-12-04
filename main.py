@@ -16,7 +16,7 @@ CoDaTi for the départements API
 import json.decoder
 
 import requests
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 __author__ = "jd-develop"
 
 
