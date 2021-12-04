@@ -142,18 +142,32 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
             'dpt': dpt
         }
     except KeyError:
-        uuid = user_raw_list[index]['author']
-        index_ = user_raw_list[index]['indexInFlag']
-        name = "unattributed"
-        color = "unattributed"
-        dpt = get_dpt_from_coordinates(coordinates, dpt_list)
-        return {
-            'uuid': uuid,
-            'index': index_,
-            'name': name,
-            'color': color,
-            'dpt': dpt
-        }
+        try:
+            uuid = user_raw_list[index]['author']
+            index_ = user_raw_list[index]['indexInFlag']
+            name = "unattributed"
+            color = user_raw_list[index]['hexColor']
+            dpt = get_dpt_from_coordinates(coordinates, dpt_list)
+            return {
+                'uuid': uuid,
+                'index': index_,
+                'name': name,
+                'color': color,
+                'dpt': dpt
+            }
+        except KeyError:
+            uuid = user_raw_list[index]['author']
+            index_ = user_raw_list[index]['indexInFlag']
+            name = "unattributed"
+            color = "unattributed"
+            dpt = get_dpt_from_coordinates(coordinates, dpt_list)
+            return {
+                'uuid': uuid,
+                'index': index_,
+                'name': name,
+                'color': color,
+                'dpt': dpt
+            }
 
 
 def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> list[dict]:

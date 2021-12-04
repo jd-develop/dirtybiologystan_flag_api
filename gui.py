@@ -100,6 +100,25 @@ def re_def_user_raw_list():
     getInfoButton.pack()
 
 
+def get_fg_and_bg_from_color(color: str):
+    """
+        Récupère une couleur pour retourner le fg et le bg correspondant pour pouvoir l'afficher
+    :return: tuple(bg, fg)
+    """
+    if re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', color):  # la couleur est vraiment une couleur
+        # convertir l'hexadécimal en RGB :
+        (r, g, b) = tuple(int(color.lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))
+
+        # calculer l'indice de luminosité :
+        darkness_index = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+        if darkness_index > 127.5:  # la couleur est claire, on met du noir
+            return color, 'black'
+        else:  # elle est claire, on met du noir
+            return color, 'white'
+    else:
+        colorLabel.config(text=f"Couleur du pixel : {color}", bg="white", fg="black")
+
+
 def get_info():
     """
         Récupère les infos d'un Pixel
@@ -152,22 +171,21 @@ def get_info():
 
     if data['name'] == "unattributed" and data['color'] == "unattributed":
         nameLabel.config(text="Désolé, ce pixel existe, mais il n'est pas attribué.")
-        colorLabel.config(text="Peut être est-il dans un crash ¯\\_(ツ)_/¯", bg="whitesmoke", fg="black")
+        colorLabel.config(text="Peut être est-il dans un crash ¯\\_(ツ)_/¯")
+        colorLabel1.config(text=f"#ffffff", bg='white', fg="black")
+
+    elif data['name'] == 'unattributed' and data['color'] != 'unattributed':
+        nameLabel.config(text="Désolé, ce pixel existe, mais il n'est pas attribué. "
+                              "Peut être est-il dans un crash ¯\\_(ツ)_/¯")
+        colorLabel.config(text="Couleur du pixel :")
+
+        bg, fg = get_fg_and_bg_from_color(data['color'])
+        colorLabel1.config(text=f"{data['color']}", bg=bg, fg=fg)
     else:
         nameLabel.config(text=f"Nom du pixel : {data['name']}")
         colorLabel.config(text="Couleur du pixel :")
-        if re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', data['color']):  # la couleur est vraiment une couleur
-            # convertir l'hexadécimal en RGB :
-            (r, g, b) = tuple(int(data['color'].lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))
-
-            # calculer l'indice de luminosité :
-            darkness_index = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
-            if darkness_index > 127.5:  # la couleur est clair, on met du noir
-                colorLabel1.config(text=f"{data['color']}", bg=data['color'], fg="black")
-            else:  # elle est claire, on met du noir
-                colorLabel1.config(text=f"{data['color']}", bg=data['color'], fg="white")
-        else:
-            colorLabel.config(text=f"Couleur du pixel : {data['color']}", bg="white", fg="black")
+        bg, fg = get_fg_and_bg_from_color(data['color'])
+        colorLabel1.config(text=f"{data['color']}", bg=bg, fg=fg)
 
     dpt_text = "Département du pixel : "
     reg_text = "(Région : "
