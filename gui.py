@@ -39,8 +39,8 @@ def def_user_raw_list():
     """
     global user_raw_list, dpt_list
     try:
-        user_raw_list = get_user_raw_list()
-        dpt_list = get_dpt_list()
+        user_raw_list = get_user_raw_list(True)
+        dpt_list = get_dpt_list(True)
         if user_raw_list == '404 not found : maybe website is down' or\
                 dpt_list == '404 not found : maybe website is down':
             print("Failed : 404 error (is website down?)")
@@ -68,8 +68,8 @@ def def_user_raw_list():
 def re_def_user_raw_list():
     global user_raw_list, dpt_list
     try:
-        user_raw_list = get_user_raw_list()
-        dpt_list = get_dpt_list()
+        user_raw_list = get_user_raw_list(True)
+        dpt_list = get_dpt_list(True)
         print("Loaded !")
     except requests.exceptions.ConnectionError:
         print("Failed : requests.exceptions.ConnectionError")
