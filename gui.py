@@ -14,7 +14,7 @@ import webbrowser
 
 import requests
 
-from main import get_index_from_coordinates, get_user_raw_list, get_data_from_index, get_dpt_list
+from dirtybiologystan_flag_api.main import get_index_from_coordinates, get_user_raw_list, get_data_from_index, get_dpt_list
 
 user_raw_list = []
 dpt_list = []
