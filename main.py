@@ -20,7 +20,7 @@ __version__ = "1.3.3"
 __author__ = "jd-develop"
 
 
-def get_user_raw_list() -> list[dict]:
+def get_user_raw_list(do_i_print: bool = False) -> list[dict]:
     """
         It returns the list of all users. The list have the shape :
             [{'entityId', 'author', 'hexColor', 'indexInFlag'}, ...] (for each user)
@@ -32,10 +32,19 @@ def get_user_raw_list() -> list[dict]:
                 my indexInFlag is 51773 but my index in user_raw_list is 50063.
 
         WARNING : execution of this function may take a while !!
+        WARNING 2 : it can return the string "404 not found : maybe website is down" when the website is down
+                    (it was happening frequently at the beginning of the experience)
+
+        This function fetches https://api-flag.fouloscopie.com/flag
+
+        :param: do_i_print : boolean.
+            True: some info are printed.
+            False: nothing is printed.
 
     :return: user_raw_list: list[dict]
     """
-    print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
+    if do_i_print:
+        print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
     flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
     if flag_request == '404 page not found':
         return '404 not found : maybe website is down'
@@ -45,7 +54,7 @@ def get_user_raw_list() -> list[dict]:
     return user_raw_list
 
 
-def get_dpt_list() -> list[dict]:
+def get_dpt_list(do_i_print: bool = False) -> list[dict]:
     """
         It returns the list of all départements. The list have the shape :
             [{'min', 'max', 'name', 'region', 'discord'}, ...] (for each département)
@@ -57,10 +66,19 @@ def get_dpt_list() -> list[dict]:
         discord is the invite link to the Discord Server of the département
 
         WARNING : execution of this function may take a while !!
+        WARNING 2 : it can return strings "404 not found : maybe website is down" or "Bad Gateway" when the website
+                    is down (contact CoDaTi on https://github.com/codati if it is the case)
+
+        This function fetches https://api.codati.ovh/departements/
+
+        :param: do_i_print : boolean.
+            True: some info are printed.
+            False: nothing is printed.
 
     :return: dpt_list: list[dict]
     """
-    print("Fetching https://api.codati.ovh/departements/... (it may take a while...)")
+    if do_i_print:
+        print("Fetching https://api.codati.ovh/departements/... (it may take a while...)")
     dpt_request = requests.get('https://api.codati.ovh/departements/')
     if dpt_request == '404 page not found':
         return '404 not found : maybe website is down'
@@ -102,7 +120,7 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
                 'color': color of the pixel ('hexColor' in an element of the user_raw_list)
                 'dpt': département name of the pixel
             }
-        warning : 'color' is not automatically an hex, due to trolls
+        warning : 'color' is not automatically a hex, due to trolls
 
     :param index: int = 0
     :param user_raw_list: user_raw_list: list[dict] = get_user_raw_list()
