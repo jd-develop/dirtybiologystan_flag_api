@@ -6,13 +6,6 @@
 # coordinates of jddev : 136:159
 # color of jddev : #10EDB8
 # département of jddev : Désert de l'Ouest (région : La Méridionale)
-"""
-Welcome ! This is a Python API for the flag of DirtyBiologyStan available here : https://fouloscopie.com/experiment/7
-Don't forget to read the doc :)
-
-Thanks :
-CoDaTi for the départements API
-"""
 import json.decoder
 
 import requests
@@ -21,8 +14,8 @@ __author__ = "jd-develop"
 
 
 def get_user_raw_list(do_i_print: bool = False) -> list[dict]:
-    """
-        It returns the list of all users. The list have the shape :
+    """Return the list of all users.
+        The list have the shape :
             [{'entityId', 'author', 'hexColor', 'indexInFlag'}, ...] (for each user)
 
         entityId is the UUID of the fouloscopie.com user, which the API is private
@@ -37,12 +30,13 @@ def get_user_raw_list(do_i_print: bool = False) -> list[dict]:
 
         This function fetches https://api-flag.fouloscopie.com/flag
 
-        :param: do_i_print : boolean.
-            True: some info are printed.
-            False: nothing is printed.
+    :param do_i_print: defines if a text have to be printed or not. Optional, by default, False.
+    :type do_i_print: bool
 
-    :return: user_raw_list: list[dict]
+    :return: user_raw_list: the list of raw users without usernames.
+    :rtype: list[dict]
     """
+
     if do_i_print:
         print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
     flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
@@ -55,8 +49,8 @@ def get_user_raw_list(do_i_print: bool = False) -> list[dict]:
 
 
 def get_dpt_list(do_i_print: bool = False) -> list[dict]:
-    """
-        It returns the list of all départements. The list have the shape :
+    """Return the list of all départements.
+        The list have the shape :
             [{'min', 'max', 'name', 'region', 'discord'}, ...] (for each département)
 
         min is the dict {'x', 'y'} of the minimum coordinates of the département
@@ -71,12 +65,13 @@ def get_dpt_list(do_i_print: bool = False) -> list[dict]:
 
         This function fetches https://api.codati.ovh/departements/
 
-        :param: do_i_print : boolean.
-            True: some info are printed.
-            False: nothing is printed.
+    :param do_i_print: defines if a text have to be printed or not. Optional, by default, False.
+    :type do_i_print: bool
 
-    :return: dpt_list: list[dict]
+    :return: dpt_list: a list of départements
+    :type: DptList
     """
+
     if do_i_print:
         print("Fetching https://api.codati.ovh/departements/... (it may take a while...)")
     dpt_request = requests.get('https://api.codati.ovh/departements/')
@@ -93,14 +88,17 @@ def get_dpt_list(do_i_print: bool = False) -> list[dict]:
     return dpt_list
 
 
-def get_index_from_coordinates(x: int = 1, y: int = 1):
-    """
-        Calculates the index in the user_raw_list (get_user_raw_list()) from coordinates.
+def get_index_from_coordinates(x: int = 1, y: int = 1) -> int:
+    """Calculates the index in the user_raw_list (get_user_raw_list()) from coordinates.
 
-    :param: x: int = 1
-    :param: y: int = 1
+    :param x: the x of the pixel. By default, 1
+    :type x: int
+    :param y: the y of the pixel. By default, 1
+    :type y: int
     :return: index in user_raw_list (get_user_raw_list())
+    :rtype: int
     """
+
     if x < (2*y - 1):
         return (x + 2 * (y-1)**2) - 1
     else:
@@ -108,26 +106,31 @@ def get_index_from_coordinates(x: int = 1, y: int = 1):
 
 
 def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordinates: tuple = None,
-                        dpt_list: list[dict] = None):
-    """
-        Get the data from the index and the user raw list (get_user_raw_list())
+                        dpt_list: list[dict] = None) -> dict:
+    """Get the data from the index and the user raw list (get_user_raw_list())
 
-        data is a dict under this shape :
-            {
-                'uuid' : uuid of the user ('author' in an element of the user_raw_list)
-                'index': pixel index ('indexInFlag' in an element of the user_raw_list, different from the index param!)
-                'name' : username -'last_name' in key 'data' of the user from https://admin.fouloscopie.com/users/(uuid)
-                'color': color of the pixel ('hexColor' in an element of the user_raw_list)
-                'dpt': département name of the pixel
-            }
-        warning : 'color' is not automatically a hex, due to trolls
+    data is a dict under this shape :
+        {
+            'uuid' : uuid of the user ('author' in user_raw_list)
+            'index': pixel index ('indexInFlag' in user_raw_list, different from the index param!)
+            'name' : name of the pixel
+            'color': color of the pixel ('hexColor' in user_raw_list)
+            'dpt': département name of the pixel
+        }
+    warning : 'color' is not automatically a hex, due to trolls
 
-    :param: index: int = 0
-    :param: user_raw_list: user_raw_list: list[dict] = get_user_raw_list()
-    :param: coordinates: tuple = (1, 1) : coordonnées (x, y)
-    :param: dpt_list: list[dict] = get_dpt_list() : liste de départements
-    :return: data: dict
+    :param index: the index returned by get_index_from_coordinates. By default, 0.
+    :type index: int
+    :param user_raw_list: the list returned by get_user_raw_list()
+    :type user_raw_list: list[dict]
+    :param coordinates: coordinates (x, y). By default, (1, 1)
+    :type coordinates: tuple[int]
+    :param dpt_list: the list returned by get_dpt_list() (départements list)
+    :type dpt_list: list[dict]
+    :return: data (see above for more info)
+    :rtype: dict
     """
+
     if user_raw_list is None:
         user_raw_list = get_user_raw_list()
     if coordinates is None:
@@ -189,8 +192,7 @@ def get_data_from_index(index: int = 0, user_raw_list: list[dict] = None, coordi
 
 
 def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] = None) -> list[dict]:
-    """
-        Returns the département(s) of a pixel from the coordinates, in a list.
+    """Return the département(s) of a pixel from the coordinates, in a list.
 
         A département returned have the shape :
             {'min', 'max', 'name', 'region', 'discord'}
@@ -201,10 +203,14 @@ def get_dpt_from_coordinates(coordinates: tuple = (1, 1), dpt_list: list[dict] =
         region is the name of the région of the département
         discord is the invite link to the Discord Server of the département
 
-    :param: coordinates: tuple(x, y)
-    :param: dpt_list: list : the dpt list from get_dpt_list()
-    :return: dpt: list[dict] : a list of matching départements from the dpt_list
+    :param coordinates: coordinates of the pixel. By default, (1, 1)
+    :type coordinates: tuple(x, y)
+    :param dpt_list: the dpt list from get_dpt_list()
+    :type dpt_list: list[dict]
+    :return: a list of matching départements from the dpt_list
+    :rtype: list[dict]
     """
+
     if dpt_list is None:
         dpt_list = get_dpt_list()
 

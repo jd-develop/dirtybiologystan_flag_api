@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<style>
+    body{
+        background-color: #444444;
+        color: white;
+        text-align: center;
+    }
+
+    table, tr, td{
+        border: 1px solid black;
+        border-collapse: collapse;
+        word-wrap: normal;
+        text-align: left;
+    }
+
+    .code{
+        font-family: monospace;
+        background-color: grey;
+        color: white;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+    a{
+        color: orange;
+    }
+</style>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DirtyBiologyStan flag API doc</title>
+</head>
+<body>
+    <h1>Welcome to the documentation of the DirtyBiologyStan flag API !</h1>
+    <p>Written by Jean Dubois <<a href="mailto:jd-dev@laposte.net">jd-develop@laposte.net</a>></p>
+    <p>Install it with <span class="code">pip install dirtybiologystan-flag-api</span></p>
+    <p><a href="https://pypi.org/project/dirtybiologystan-flag-api/">PyPi page</a></p>
+    <p><a href="index.html">White Theme</a></p>
+
+    <h2 id="functions">Functions :</h2>
+    <table>
+        <tbody>
+            <tr>
+                <td><h3>Function name</h3></td>
+                <td><h3>Function parameters</h3></td>
+                <td><h3>Description</h3></td>
+                <td><h3>Return</h3></td>
+                <td><h3>Warnings, Infos</h3></td>
+            </tr>
+            <tr>
+                <td><b id="get_data_from_index">get_data_from_index</b></td>
+                <td>
+                    <p>index: int = 0</p>
+                    <p>user_raw_list: list[dict] = <a href="#get_user_raw_list">get_user_raw_list()</a></p>
+                    <p>coordinates: tuple = (1, 1)</p>
+                    <p>dpt_list: list[dict] = <a href="#get_dpt_list">get_dpt_list()</a></p>
+                </td>
+                <td><p>Get the data from the index and the user raw list (<a href="#get_user_raw_list">get_user_raw_list</a>)</p></td>
+                <td>
+                    <p>Dict under this shape :<br /><br />
+                       {'uuid', 'index', 'name', 'color', 'dpt'}<br /><br />
+                       Where:<br />
+                       <b>'uuid':</b>UUID of the user ('author' in <a href="#get_user_raw_list">URLIST</a>)<br />
+                       <b>'index':</b> pixel index ('indexInFlag' in <a href="#get_user_raw_list">URLIST</a>, different from the index param!)<br />
+                       <b>'name':</b> name of the pixel<br />
+                       <b>'color':</b> color of the pixel ('hexColor' in <a href="#get_user_raw_list">URLIST</a>)<br />
+                       <b>'dpt':</b> département name of the pixel<br />
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        WARNING: 'color' is not automatically a hex, due to trolls<br /><br />
+                        INFO: Index param is get from <a href="#get_index_from_coordinates">get_index_from_coordinates</a>
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b id="get_dpt_from_coordinates">get_dpt_from_coordinates</b></td>
+                <td>
+                    <p>coordinates: tuple = (1, 1)</p>
+                    <p>dpt_list: list[dict] = <a href="#get_dpt_list">get_dpt_list()</a></p>
+                </td>
+                <td><p>Return the département(s) of a pixel from the coordinates, in a list</p></td>
+                <td rowspan="2">
+                    <p>List of dicts. Dicts have this shape :<br /><br />
+                       {'min', 'max', 'name', 'region', 'discord'}<br /><br />
+                       Where:<br />
+                       <b>'min':</b> {'x', 'y'} of the minimum coordinates of the département<br />
+                       <b>'max':</b> {'x', 'y'} of the maximum coordinates of the département<br />
+                       <b>'name':</b> name of the département<br />
+                       <b>'region':</b> région of the département<br />
+                       <b>'discord':</b> invite link to the département discord server<br />
+                    </p>
+                </td>
+                <td style="background-color: grey;"></td>
+            </tr>
+
+            <tr>
+                <td><b id="get_dpt_list">get_dpt_list</b></td>
+                <td><p>do_i_print: bool = False</p></td>
+                <td><p>Return the list of all départements. If do_i_print, a text is printed.</p></td>
+                <td>
+                    <p>
+                        WARNING: execution of this function may take a while !!<br /><br />
+
+                        WARNING 2: it can return strings<br />
+                        "404 not found : maybe website is down" or "Bad Gateway"<br />
+                        when the website is down<br />
+                        (contact CoDaTi <a href="https://github.com/codati">here</a> if it is the case)<br /><br />
+
+                        INFO: This function fetches https://api.codati.ovh/departements/
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b id="get_index_from_coordinates">get_index_from_coordinates</b></td>
+                <td>
+                    <p>x: int = 1</p>
+                    <p>y: int = 1</p>
+                </td>
+                <td><p>Calculates the index in the user_raw_list (<a href="#get_user_raw_list">get_user_raw_list()</a>) from coordinates.</p></td>
+                <td><p>int: Index in user_raw_list (<a href="#get_user_raw_list">get_user_raw_list()</a>)</p></td>
+                <td style="background-color: grey;"></td>
+            </tr>
+
+            <tr>
+                <td><b id="get_user_raw_list">get_user_raw_list</b></td>
+                <td><p>do_i_print: bool = False</p></td>
+                <td><p>Return the list of all users. If do_i_print, a text is printed.</p></td>
+                <td>
+                    <p>List of dicts (URLIST). Dicts have this shape :<br /><br />
+                       {'entityId', 'author', 'hexColor', 'indexInFlag'}<br /><br />
+                       Where:<br />
+                       <b>'entityId':</b> UUID of the fouloscopie.com user, which the API is private<br />
+                       <b>'author':</b> UUID of the pixel, which the API is open<br />
+                       <b>'hexColor':</b> color of the pixel<br />
+                       <b>'indexInFlag':</b> pixel index, but due to website crashes it's not the index in the list returned by this function<br />
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        WARNING: execution of this function may take a while !!<br /><br />
+
+                        WARNING 2: it can return strings<br />
+                        "404 not found : maybe website is down"<br />
+                        when the website is down<br />
+                        (it was happening frequently at the beginning of the experience)<br /><br />
+
+                        WARNING 3: 'hexColor' is not automatically a hex, due to trolls<br /><br />
+
+                        INFO: This function fetches https://api-flag.fouloscopie.com/flag
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
