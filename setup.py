@@ -5,13 +5,13 @@ from distutils.core import setup
 setup(
   name='dirtybiologystan_flag_api',
   packages=['dirtybiologystan_flag_api'],
-  version='1.3.4',
+  version='1.4',
   license='gpl-3.0',
   description="An API that get infos about pixels of the https://fouloscopie.com/experiment/7 's flag",
   author='Jean Dubois',
   author_email='jd-dev@laposte.net',
   url='https://github.com/jd-develop/dirtybiologystan_flag_api',
-  download_url='https://github.com/jd-develop/dirtybiologystan_flag_api/archive/refs/tags/1.3.4.tar.gz',
+  download_url='https://github.com/jd-develop/dirtybiologystan_flag_api/archive/refs/tags/1.4.tar.gz',
   keywords=['DIRTYBIOLOGYSTAN'],
   install_requires=[
           'requests',
