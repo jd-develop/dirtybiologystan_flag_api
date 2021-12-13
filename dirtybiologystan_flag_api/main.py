@@ -38,8 +38,8 @@ def get_user_raw_list(do_i_print: bool = False) -> list[dict]:
     """
 
     if do_i_print:
-        print("Fetching https://api-flag.fouloscopie.com/flag... (it may take a while...)")
-    flag_request = requests.get('https://api-flag.fouloscopie.com/flag')
+        print("Fetching https://flag-api.dirtybiology.fouloscopie.com/flag... (it may take a while...)")
+    flag_request = requests.get('https://flag-api.dirtybiology.fouloscopie.com/flag')
     if flag_request == '404 page not found':
         return '404 not found : maybe website is down'
     elif flag_request == '{"statusCode":404,"message":"Cannot GET /flag","error":"Not Found"}':
