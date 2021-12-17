@@ -11,7 +11,7 @@ setup(
   author='Jean Dubois',
   author_email='jd-dev@laposte.net',
   url='https://github.com/jd-develop/dirtybiologystan_flag_api',
-  download_url='https://github.com/jd-develop/dirtybiologystan_flag_api/archive/refs/tags/1.4.tar.gz',
+  download_url='https://github.com/jd-develop/dirtybiologystan_flag_api/archive/refs/tags/1.4-reupload.tar.gz',
   keywords=['DIRTYBIOLOGYSTAN'],
   install_requires=[
           'requests',
