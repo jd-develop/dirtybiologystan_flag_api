@@ -1,9 +1,17 @@
 =========================
 Dirtybiologystan Flag Api
 =========================
+
 Une API du drapeau de https://fouloscopie.com/experiment/7
 
 An API of the https://fouloscopie.com/experiment/7 's flag
+
+Fin de l'expérience / End of the experiment
+===========================================
+
+L'expérience s'étant terminée, l'API ne fonctionne plus...
+
+The experiment is finished, so the API does not work anymore.
 
 Using this API
 ==============
@@ -18,7 +26,7 @@ Download the repo then launch GUI.py. You have to to install `requests` python m
 
 Warning
 ---------------------
-* **Needs *Python 3.9.X* or Python 3.10.X**
+**Needs Python 3.9.X or Python 3.10.X**
 
 DOCS
 ====
