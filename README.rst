@@ -9,9 +9,9 @@ An API of the https://fouloscopie.com/experiment/7 's flag
 Léo Grasset
 ===========
 
-L'auteur de ce programme soutient les femmes ayant accusé Léo Grasset d'agressions/harcèlement sexuel.le(s).
+L'auteur de ce programme ne porte aucune opinion sur l’affaire en cours.
 
-Cependant, le programme gardera son nom de 'Dirtybiologystan flag API' car c'est par cette désignation que le pays existait à l'époque.
+Le programme gardera son nom de 'Dirtybiologystan flag API' car c'est par cette désignation que le pays existait à l'époque.
 
 
 Fin de l'expérience / End of the experiment
